@@ -1,0 +1,60 @@
+# Usar una imagen base de Debian slim
+FROM debian:bullseye-slim
+
+# Instalar paquetes adicionales necesarios
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        python3 \
+        python3-pip \
+        unzip \
+        tar \
+        openssh-client
+
+# Instalar Docker
+RUN curl -fsSL https://get.docker.com -o get-docker.sh \
+    && sh get-docker.sh
+
+# Instalar Docker Compose
+ARG DOCKER_COMPOSE_VERSION=1.29.2
+RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose \
+    && chmod +x /usr/local/bin/docker-compose
+
+# Instalar Vagrant
+ARG VAGRANT_VERSION=2.2.18
+RUN curl -LO https://releases.hashicorp.com/vagrant/${VAGRANT_VERSION}/vagrant_${VAGRANT_VERSION}_x86_64.deb \
+    && dpkg -i vagrant_${VAGRANT_VERSION}_x86_64.deb \
+    && rm vagrant_${VAGRANT_VERSION}_x86_64.deb
+
+# Instalar pip
+RUN curl -sSL https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+    && python3 get-pip.py \
+    && rm get-pip.py
+
+# Instalar Terraform
+ARG TERRAFORM_VERSION=0.15.5
+RUN curl -LO https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+    && mv terraform /usr/local/bin \
+    && rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+# Instalar Ansible
+ARG ANSIBLE_VERSION=4.6.0
+RUN pip3 install ansible==${ANSIBLE_VERSION}
+
+# Establecer la versión de Python utilizada
+RUN ln -sf /usr/bin/python3 /usr/bin/python
+
+# Limpiar la caché de pip
+RUN pip3 cache purge
+
+# Configurar el directorio de trabajo
+WORKDIR /app
+
+# Exponer el puerto de Terraform
+EXPOSE 8000
+
+# Mantener el contenedor en ejecución
+CMD ["tail", "-f", "/dev/null"]
