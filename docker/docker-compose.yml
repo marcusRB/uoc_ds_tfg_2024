@@ -1,0 +1,19 @@
+version: '3.7'
+services:
+  notebook:
+    build:
+      context: .
+      dockerfile: Dockerfile_notebook
+    ports:
+      - 8888:8888
+      - 8000:8000
+    user: root
+    volumes:
+      - ../../jupyterlab_wdir/:/jupyterlab_wdir
+    command: jupyter notebook --notebook-dir=/jupyterlab_wdir --ip='0.0.0.0' --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile_mlflow
+    ports:
+      - 5000:5000
