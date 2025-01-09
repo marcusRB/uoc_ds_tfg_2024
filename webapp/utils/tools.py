@@ -3,11 +3,11 @@ import pandas as pd
 import os
 
 # Get the path to the current directory of the script
-current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Get the path to the image in the imgs folder
-obs_processed = os.path.join(current_dir, "notebooks", "csv", "observations_processed.csv")
-obs_responses = os.path.join(current_dir, "notebooks", "csv", "observations_responses.csv")
+obs_processed = os.path.join(project_root, "notebooks", "csv", "observations_processed.csv")
+obs_responses = os.path.join(project_root, "notebooks", "csv", "observations_responses.csv")
 
 @st.cache_data
 def load_data():
