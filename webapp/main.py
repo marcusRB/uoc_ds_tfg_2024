@@ -4,8 +4,11 @@ import streamlit as st
 
 from utils.tools import load_data, warning
 
+# Get the path to the current directory of the script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 # Get the path to the image in the imgs folder
-image_path = os.path.join(os.chroot, "static", "header-heart-prediction.png")
+image_path = os.path.join(current_dir, "static", "header-heart-prediction.png")
 
 title = "LLM supported Cardiovascular disease Observations"
 
